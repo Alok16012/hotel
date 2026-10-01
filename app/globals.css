@@ -1,26 +1,454 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   HOTEL OS CRM — DESIGN TOKENS
+   Layer 1: primitives  ->  Layer 2: semantic  ->  Layer 3: component
+   Colour space is OKLCH throughout: perceptually uniform lightness
+   means a ramp step looks like the same step at every hue.
+   ============================================================ */
+
+@theme {
+  /* ---------- Layer 1: primitive ramps ---------- */
+
+  /* Neutrals, tinted toward the navy brand hue (chroma 0.004-0.012)
+     rather than reflexively warm. Never pure #000 / #fff. */
+  --color-ink-50: oklch(0.985 0.003 265);
+  --color-ink-100: oklch(0.967 0.004 265);
+  --color-ink-200: oklch(0.928 0.006 265);
+  --color-ink-300: oklch(0.869 0.008 265);
+  --color-ink-400: oklch(0.705 0.012 265);
+  --color-ink-500: oklch(0.573 0.014 265);
+  --color-ink-600: oklch(0.464 0.016 265);
+  --color-ink-700: oklch(0.377 0.018 265);
+  --color-ink-800: oklch(0.283 0.022 265);
+  --color-ink-900: oklch(0.216 0.026 265);
+  --color-ink-950: oklch(0.155 0.028 265);
+
+  /* Primary: deep navy / indigo (§28) */
+  --color-brand-50: oklch(0.968 0.014 265);
+  --color-brand-100: oklch(0.932 0.031 265);
+  --color-brand-200: oklch(0.874 0.056 265);
+  --color-brand-300: oklch(0.782 0.093 265);
+  --color-brand-400: oklch(0.662 0.137 265);
+  --color-brand-500: oklch(0.556 0.168 265);
+  --color-brand-600: oklch(0.474 0.166 265);
+  --color-brand-700: oklch(0.408 0.142 265);
+  --color-brand-800: oklch(0.346 0.112 265);
+  --color-brand-900: oklch(0.292 0.086 265);
+
+  /* Accent: controlled teal (§28). Saturation held under 80%. */
+  --color-accent-100: oklch(0.941 0.038 195);
+  --color-accent-300: oklch(0.812 0.089 195);
+  --color-accent-500: oklch(0.652 0.117 195);
+  --color-accent-600: oklch(0.567 0.105 195);
+  --color-accent-700: oklch(0.478 0.088 195);
+
+  /* Semantic status ramps */
+  --color-positive-100: oklch(0.945 0.042 158);
+  --color-positive-500: oklch(0.652 0.135 158);
+  --color-positive-600: oklch(0.564 0.124 158);
+  --color-positive-700: oklch(0.468 0.104 158);
+
+  --color-caution-100: oklch(0.958 0.048 75);
+  --color-caution-500: oklch(0.742 0.148 75);
+  --color-caution-600: oklch(0.658 0.146 65);
+  --color-caution-700: oklch(0.538 0.124 55);
+
+  --color-critical-100: oklch(0.948 0.030 25);
+  --color-critical-500: oklch(0.625 0.198 25);
+  --color-critical-600: oklch(0.552 0.196 26);
+  --color-critical-700: oklch(0.468 0.168 26);
+
+  /* Intelligence: purple, reserved for AI / automation only (§28) */
+  --color-intel-100: oklch(0.944 0.032 295);
+  --color-intel-500: oklch(0.592 0.162 295);
+  --color-intel-600: oklch(0.512 0.166 295);
+  --color-intel-700: oklch(0.432 0.142 295);
+
+  /* Channel identity lives outside @theme, further down this file. */
+
+  /* ---------- Layer 2: semantic surfaces ---------- */
+  /* Depth is built from layered tone, not stacked shadows (§5). */
+  --color-canvas: oklch(0.982 0.004 90); /* warm off-white base (§28) */
+  --color-surface: oklch(0.996 0.002 90); /* cards, panels */
+  --color-surface-sunken: oklch(0.963 0.005 265); /* wells, table headers */
+  --color-surface-raised: oklch(1 0 0); /* drawers, popovers */
+  --color-surface-inverse: oklch(0.196 0.026 265); /* sidebar, tooltips */
+
+  --color-hairline: oklch(0.898 0.007 265); /* the 1px workhorse */
+  --color-hairline-strong: oklch(0.845 0.010 265);
+  --color-hairline-inverse: oklch(0.302 0.020 265);
+
+  --color-text-primary: oklch(0.216 0.026 265);
+  --color-text-secondary: oklch(0.464 0.016 265);
+  --color-text-muted: oklch(0.573 0.014 265); /* 4.6:1 on canvas — verified */
+  --color-text-onDark: oklch(0.967 0.004 265);
+  --color-text-onDark-muted: oklch(0.724 0.014 265);
+
+  /* ---------- Typography ---------- */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* §29 hierarchy. Ratio >= 1.25 between adjacent steps. */
+  --text-display: 2rem; /* 32px */
+  --text-display--line-height: 1.15;
+  --text-display--letter-spacing: -0.022em;
+  --text-page: 1.5rem; /* 24px */
+  --text-page--line-height: 1.2;
+  --text-page--letter-spacing: -0.018em;
+  --text-section: 1.125rem; /* 18px */
+  --text-section--line-height: 1.3;
+  --text-section--letter-spacing: -0.012em;
+  --text-card: 0.875rem; /* 14px semibold */
+  --text-card--line-height: 1.35;
+  --text-card--letter-spacing: -0.006em;
+  --text-body: 0.875rem; /* 14px (§27) */
+  --text-body--line-height: 1.5;
+  --text-meta: 0.75rem; /* 12px */
+  --text-meta--line-height: 1.35;
+  --text-micro: 0.6875rem; /* 11px — badges, column heads */
+  --text-micro--line-height: 1.25;
+
+  /* ---------- Geometry ---------- */
+  /* A radius hierarchy, not one radius everywhere. Cards top out at 12px. */
+  --radius-micro: 3px;
+  --radius-sm: 5px;
+  --radius-control: 7px;
+  --radius-card: 10px;
+  --radius-surface: 12px;
+
+  /* ---------- Elevation ---------- */
+  /* Diffused ambient light + a hairline ring. No harsh dark drop shadows. */
+  --shadow-hairline: 0 0 0 1px oklch(0.216 0.026 265 / 0.06);
+  --shadow-raised:
+    0 0 0 1px oklch(0.216 0.026 265 / 0.05),
+    0 1px 2px -1px oklch(0.216 0.026 265 / 0.08),
+    0 2px 6px -2px oklch(0.216 0.026 265 / 0.05);
+  --shadow-float:
+    0 0 0 1px oklch(0.216 0.026 265 / 0.06),
+    0 2px 4px -2px oklch(0.216 0.026 265 / 0.06),
+    0 8px 20px -6px oklch(0.216 0.026 265 / 0.10);
+  --shadow-overlay:
+    0 0 0 1px oklch(0.216 0.026 265 / 0.07),
+    0 8px 16px -8px oklch(0.216 0.026 265 / 0.12),
+    0 24px 48px -16px oklch(0.216 0.026 265 / 0.16);
+  /* Inner highlight — the top edge catching light on a raised surface */
+  --shadow-bezel: inset 0 1px 0 0 oklch(1 0 0 / 0.65);
+  --shadow-bezel-inverse: inset 0 1px 0 0 oklch(1 0 0 / 0.06);
+
+  /* ---------- Motion ---------- */
+  /* Strong custom curves. The CSS built-ins are too weak for UI. */
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spatial: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-in-out-subtle: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Timing bands. Ops tool, Emil-weighted: nothing over 260ms. */
+  --duration-instant: 80ms;
+  --duration-micro: 130ms;
+  --duration-component: 180ms;
+  --duration-spatial: 240ms;
+
+  /* ---------- Layout ---------- */
+  --spacing-sidebar: 248px;
+  --spacing-sidebar-collapsed: 72px;
+  --spacing-topbar: 64px; /* §9 */
+  --spacing-context: 340px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ============================================================
+   Semantic z-index scale. Never 999 / 9999.
+   ============================================================ */
+@layer base {
+  /* Channel identity (§30). Each enquiry source gets one hue so an operator
+     can read the channel mix of a list without parsing any text. Lightness is
+     pinned at 0.58 across all eight so no channel out-shouts another, and
+     chroma is held low enough that a column of these stays quiet.
 
-@media (prefers-color-scheme: dark) {
+     These are plain custom properties, not @theme entries. Tailwind only emits
+     a theme variable it can see referenced by a utility class, and the only
+     consumers here build the name at runtime (`var(--color-channel-${source})`
+     in the source badge and the channel mix chart). Inside @theme the whole
+     set was dropped from the stylesheet, which rendered every badge as white
+     text on no background. */
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-channel-whatsapp: oklch(0.58 0.118 150);
+    --color-channel-website: oklch(0.58 0.118 265);
+    --color-channel-booking-com: oklch(0.58 0.126 250);
+    --color-channel-phone: oklch(0.58 0.096 210);
+    --color-channel-instagram: oklch(0.58 0.136 340);
+    --color-channel-walk-in: oklch(0.58 0.072 90);
+    --color-channel-email: oklch(0.58 0.078 285);
+    --color-channel-google-business: oklch(0.58 0.126 45);
+  }
+
+  :root {
+    --z-base: 0;
+    --z-sticky: 20;
+    --z-dropdown: 40;
+    --z-overlay: 50;
+    --z-drawer: 60;
+    --z-modal: 70;
+    --z-toast: 80;
+    --z-tooltip: 90;
+  }
+
+  * {
+    border-color: var(--color-hairline);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.5;
+    /* Slightly tighter tracking reads as more precise at UI sizes */
+    letter-spacing: -0.006em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  /* Numbers in an operations product must align in columns. */
+  .tabular,
+  table,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    font-weight: 600;
+  }
+
+  /* One focus treatment across the whole product. Never outline:none
+     without a :focus-visible replacement. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  ::selection {
+    background-color: var(--color-brand-200);
+    color: var(--color-ink-950);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Liquid-glass material. Scoped deliberately to floating layers only —
+     command palette, drawers, dropdowns, topbar-on-scroll. Never applied
+     to tables, forms, or scrolling content: backdrop-filter on a scroll
+     container forces continuous GPU repaints. */
+  /* Floating layers only — never a scroll container (§5). The alpha is high
+     enough that words behind never ghost through; what the blur carries is the
+     colour and shape of the surface below, which is what tells you the layer
+     is floating over your work rather than replacing it. */
+  /* Do not hand-write the `-webkit-` prefix here. Lightning CSS (which Tailwind
+     v4 compiles through) treats the prefixed form as an alias of the same
+     property, so a manual pair collapses to whichever came last — and shipping
+     only `-webkit-backdrop-filter` means Chromium drops the effect entirely.
+     Declaring the standard property alone lets the compiler add whatever
+     prefixes the browserslist targets actually call for. */
+  .material-float {
+    background-color: oklch(0.996 0.002 90 / 0.94);
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .material-float-inverse {
+    background-color: oklch(0.196 0.026 265 / 0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  /* Concentric radii: an inner core nested in an outer shell needs a
+     smaller radius by exactly the padding, or the curves fight. */
+  .bezel-shell {
+    padding: 3px;
+    border-radius: var(--radius-surface);
+    background-color: var(--color-surface-sunken);
+    box-shadow: var(--shadow-hairline);
+  }
+  .bezel-core {
+    border-radius: calc(var(--radius-surface) - 3px);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-raised), var(--shadow-bezel);
+  }
+
+  /* ----------------------------------------------------------------
+     Radix data-state animations.
+     Written as real CSS so we don't depend on tailwindcss-animate.
+     Enter and exit are deliberately asymmetric: exits are shorter and
+     travel less, because the user's attention has already moved on.
+     ---------------------------------------------------------------- */
+  .anim-pop {
+    transform-origin: var(--radix-popper-transform-origin, center);
+  }
+  .anim-pop[data-state="open"],
+  .anim-pop[data-state="delayed-open"] {
+    animation: pop-in var(--duration-micro) var(--ease-out-quint);
+  }
+  .anim-pop[data-state="closed"] {
+    animation: pop-out var(--duration-instant) var(--ease-out-quint);
+  }
+
+  .anim-overlay[data-state="open"] {
+    animation: fade-in var(--duration-component) var(--ease-out-quint);
+  }
+  .anim-overlay[data-state="closed"] {
+    animation: fade-out var(--duration-micro) var(--ease-out-quint);
+  }
+
+  .anim-modal[data-state="open"] {
+    animation: modal-in var(--duration-component) var(--ease-out-expo);
+  }
+  .anim-modal[data-state="closed"] {
+    animation: modal-out var(--duration-micro) var(--ease-out-quint);
+  }
+
+  .anim-drawer-left {
+    --drawer-from: -100%;
+  }
+  .anim-drawer-right {
+    --drawer-from: 100%;
+  }
+
+  .anim-drawer[data-state="open"] {
+    animation: drawer-in var(--duration-spatial) var(--ease-spatial);
+  }
+  .anim-drawer[data-state="closed"] {
+    animation: drawer-out var(--duration-component) var(--ease-spatial);
+  }
+
+  .scrollbar-slim {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-300) transparent;
+  }
+  .scrollbar-slim::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scrollbar-slim::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-slim::-webkit-scrollbar-thumb {
+    background-color: var(--color-ink-300);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  .scrollbar-slim::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-ink-400);
+  }
+}
+
+/* ============================================================
+   Keyframes. Transform + opacity only, never layout properties.
+   Nothing starts from scale(0) — things don't appear from nothing.
+   ============================================================ */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes pop-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes modal-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+/* Drawers travel along their own edge. `--drawer-from` is set by the
+   directional utility below, so one keyframe pair serves both sides and a
+   left-hand panel can never slide in from the right. */
+@keyframes drawer-in {
+  from {
+    transform: translateX(var(--drawer-from, 100%));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes drawer-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--drawer-from, 100%));
+  }
+}
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* ============================================================
+   Reduced motion. Mandatory, not a follow-up.
+   Opacity is preserved where it aids comprehension.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
